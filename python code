@@ -1,0 +1,35 @@
+from smbus import SMBus
+
+#the slave address
+addr = 0x8
+
+bus = SMBus(1)
+
+#prompt the user for input
+print("Enter 1 for ON or 0 for OFF")
+
+numb = 1
+while numb == 1:
+
+    #get the input
+    i2cData = input(">>>>   ")
+    
+    #send the signal that will turn the LED off
+    if i2cData == "0":
+        bus.write_byte(addr, 0x0)
+        
+    #send the signal that will turn the LED on
+    elif i2cData == "1":
+        bus.write_byte(addr, 0x1)
+    
+    #get the reply from the Arduino
+    answer = bus.read_byte(addr)
+    if answer == 0:
+        printAnswer = "OFF"
+    elif answer == 1:
+        printAnswer = "ON"
+    print("Arduino answer to RPi: ",printAnswer)
+    
+    #if input is incorrect, break the loop and end the program
+    if i2cData != "1" and i2cData != "0":
+        numb = 0
